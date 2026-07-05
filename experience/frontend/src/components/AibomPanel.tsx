@@ -1,17 +1,5 @@
 import { useModel } from '../hooks/useModel'
-import type { Benchmark } from '../lib/types'
-
-function benchmarkPercent(benchmark: Benchmark) {
-  if (benchmark.direction === 'max') {
-    if (benchmark.score <= 0) return 100
-    return Math.min(100, (benchmark.threshold / benchmark.score) * 100)
-  }
-  return Math.min(100, (benchmark.score / Math.max(benchmark.threshold, 0.01)) * 100)
-}
-
-function thresholdLabel(benchmark: Benchmark) {
-  return `${benchmark.direction === 'max' ? '<=' : '>='} ${benchmark.threshold}`
-}
+import { benchmarkPercent, thresholdLabel } from '../lib/benchmark'
 
 export default function AibomPanel() {
   const { aibom, promotion, loading } = useModel()

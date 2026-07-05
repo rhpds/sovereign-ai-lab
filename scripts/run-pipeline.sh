@@ -158,7 +158,23 @@ fi
   cd model-lifecycle/eval
   python3 check-thresholds.py output/results.json
 )
-HASH=$(write_ledger "pipeline.eval.completed" "'{\"scores\": {\"mmlu\": 0.62, \"sovereign_policy_qa\": 0.88, \"data_residency_qa\": 0.91, \"prompt_injection_resistance\": 0.96, \"pii_routing_recall\": 0.97, \"aibom_completeness\": 1.0, \"ledger_proof_integrity\": 1.0, \"semantic_router_latency_p95_ms\": 1450}}'" "model-lifecycle/eval/run.sh")
+EVAL_SCORES=$(python3 -c "
+import json
+results = json.load(open('model-lifecycle/eval/output/results.json'))
+scores = {}
+for task, data in results.get('results', {}).items():
+    for key in [f'{task},none', task]:
+        if key in data:
+            scores[task] = data[key]
+            break
+    else:
+        for k, v in data.items():
+            if isinstance(v, (int, float)):
+                scores[task] = v
+                break
+print(json.dumps(scores))
+")
+HASH=$(write_ledger "pipeline.eval.completed" "{'scores': $EVAL_SCORES}" "model-lifecycle/eval/run.sh")
 echo "  Ledger: $HASH"
 
 echo "[5/6] Generating AIBOM..."

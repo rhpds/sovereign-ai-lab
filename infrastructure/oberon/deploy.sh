@@ -23,7 +23,9 @@ echo ""
 
 apply_manifest() {
   local path="$1"
-  sed "s/namespace: sovereign-ai-lab/namespace: ${NS}/g" "$path" | oc apply -f -
+  local escaped_ns
+  escaped_ns=$(printf '%s\n' "$NS" | sed 's/[&/\]/\\&/g')
+  sed "s|namespace: sovereign-ai-lab|namespace: ${escaped_ns}|g" "$path" | oc apply -f -
 }
 
 rollout() {
@@ -181,7 +183,7 @@ print_endpoints() {
 }
 
 echo "[1/12] Creating namespace..."
-oc create namespace "$NS" --dry-run=client -o yaml | oc apply -f -
+apply_manifest "$SCRIPT_DIR/namespace.yaml"
 
 echo "[2/12] Creating model cache PVC..."
 apply_manifest "$SCRIPT_DIR/model-cache-pvc.yaml"

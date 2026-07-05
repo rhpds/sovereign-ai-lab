@@ -46,9 +46,7 @@ def normalize_spec(name: str, raw_spec: Any) -> BenchmarkSpec:
 
 
 def extract_score(task_data: dict[str, Any], metric: str) -> float | None:
-    keys = [metric, f"{metric},none"]
-    if metric == "acc":
-        keys.extend(["acc,none", "acc"])
+    keys = [f"{metric},none", metric]
 
     for key in keys:
         if key in task_data:

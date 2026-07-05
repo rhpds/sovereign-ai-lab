@@ -19,6 +19,10 @@ def check(name, fn):
         fn()
         print(f"  PASS  {name}")
         results.append(True)
+    except subprocess.CalledProcessError as e:
+        detail = e.stderr[-300:] if e.stderr else str(e)
+        print(f"  FAIL  {name}: {detail}")
+        results.append(False)
     except Exception as e:
         print(f"  FAIL  {name}: {e}")
         results.append(False)

@@ -5,17 +5,20 @@ import type { JurisdictionProfile } from '../lib/types'
 export function useProfile(profileId: string) {
   const [profile, setProfile] = useState<JurisdictionProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activeId, setActiveId] = useState(profileId)
+
+  if (profileId !== activeId) {
+    setActiveId(profileId)
+    setLoading(true)
+    setProfile(null)
+  }
 
   useEffect(() => {
     let cancelled = false
 
-    Promise.resolve()
-      .then(() => {
-        if (!cancelled) setLoading(true)
-        return api.profiles.get(profileId)
-      })
-      .then(profile => {
-        if (!cancelled) setProfile(profile)
+    api.profiles.get(profileId)
+      .then(data => {
+        if (!cancelled) setProfile(data)
       })
       .catch(() => {
         if (!cancelled) setProfile(null)
