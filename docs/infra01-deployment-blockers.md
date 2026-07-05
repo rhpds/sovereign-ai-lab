@@ -11,7 +11,7 @@ Oberon (DEV) ──→ Infra01 (TEST) ──→ Integration (STAGING) ──→ 
 
 ## Current State on Oberon (DEV)
 
-- 11 pods, 32/32 verification checks pass
+- 11 pods, 33/33 verification checks pass
 - Deployed via `infrastructure/oberon/deploy.sh` (raw `oc apply`)
 - Dedicated OVMS instance with Granite 3.2 2B (INT4, converted in-cluster)
 - TDX available (real attestation)
