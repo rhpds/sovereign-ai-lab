@@ -82,3 +82,6 @@ scenarios:
 
 deploy-oberon:
 	@bash infrastructure/oberon/deploy.sh
+
+smoke-test:
+	@python3 scripts/smoke-test.py
