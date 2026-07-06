@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { api } from '../lib/api'
 import ProofChain from '../components/ProofChain'
 import { useLedger } from '../hooks/useLedger'
-import type { JurisdictionProfile, ChainVerification, WriterSummary, RouteResult } from '../lib/types'
+import type { JurisdictionProfile, ChainVerification, RouteResult } from '../lib/types'
 
 // ─── Categories + test data ────────────────────────────────────────────────
 
@@ -108,7 +108,6 @@ export default function JurisdictionLab({ onExit }: Props) {
 
   // Step 4 state
   const [verification, setVerification] = useState<ChainVerification | null>(null)
-  const [writers, setWriters] = useState<WriterSummary | null>(null)
   const [verifying, setVerifying] = useState(false)
 
   useEffect(() => {
@@ -143,9 +142,8 @@ export default function JurisdictionLab({ onExit }: Props) {
   const verify = async () => {
     setVerifying(true)
     try {
-      const [v, w] = await Promise.all([api.ledger.verify(), api.ledger.writers()])
+      const v = await api.ledger.verify()
       setVerification(v)
-      setWriters(w)
     } catch { /* */ }
     finally { setVerifying(false) }
   }
